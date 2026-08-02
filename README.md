@@ -13,3 +13,8 @@ go run ./cmd/smartspends/
 
 ## Technologies Used
 - Go (Golang) for backend development
+
+## Project Structure
+The project organization is based on the standard Go project layout, with the following key directories:
+- `cmd/`: Contains the main application entry point.  
+- `internal/`: Contains the core business logic and application code.
