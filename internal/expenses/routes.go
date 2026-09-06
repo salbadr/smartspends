@@ -6,7 +6,7 @@ import (
 )
 
 func expensesHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
+	fn := func(w http.ResponseWriter, req *http.Request) {
 		var er ExpenseRequest
 
 		if err := json.NewDecoder(req.Body).Decode(&er); err != nil {
@@ -23,6 +23,8 @@ func expensesHandler() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
+
+	return http.HandlerFunc(fn);
 }
 
 func RegisterExpenseRoutes(router *http.ServeMux) {

@@ -2,19 +2,22 @@ package main
 
 import (
 	"log"
-	"github.com/salbadr/smartspends/internal/expenses"
 	"net/http"
+
+	"github.com/rs/cors"
+	"github.com/salbadr/smartspends/internal/expenses"
 )
 
-
 func main() {
-	
+
 	mux := http.NewServeMux()
 	expenses.RegisterExpenseRoutes(mux)
+
 	mux.Handle("/", http.NotFoundHandler())
 	log.Println("Server started on port 8000")
+	handler := cors.Default().Handler(mux)
 
-	if err := http.ListenAndServe(":8000", mux); err != nil {
+	if err := http.ListenAndServe(":8000", handler); err != nil {
 		log.Fatal(err)
 	}
 
