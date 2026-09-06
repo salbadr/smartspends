@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Go Server",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/cmd/smartspends",
+            "env": {},
+            "args": [],
+            "showLog": true,
+            "trace": "verbose",
+            "logOutput": "rpc"
+        },
+        {
+            "name": "Debug TypeScript (Frontend)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}/app/src",
+            "sourceMaps": true,
+            "sourceMapPathOverride": {
+                "webpack:///./src/*": "${webRoot}/*"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Full Stack Debug",
+            "configurations": [
+                "Launch Go Server",
+                "Debug TypeScript (Frontend)"
+            ],
+            "stopOnEntry": false
+        }
+    ]
+}
