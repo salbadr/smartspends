@@ -9,12 +9,15 @@ import (
 )
 
 func main() {
+	log.Println("Starting")
+	
 
 	mux := http.NewServeMux()
 	expenses.RegisterExpenseRoutes(mux)
 
 	mux.Handle("/", http.NotFoundHandler())
 	log.Println("Server started on port 8000")
+
 	handler := cors.Default().Handler(mux)
 
 	if err := http.ListenAndServe(":8000", handler); err != nil {

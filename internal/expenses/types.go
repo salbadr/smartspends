@@ -1,5 +1,4 @@
-package categories
-
+package expenses
 import (
 	"encoding/json"
 )
@@ -50,4 +49,27 @@ func (cat *Categories) MarshalJSON() ([]byte, error) {
 
 	return json.Marshal(cat.String())
 
+}
+
+type ExpenseRequest struct {
+	Expense string `json:"expense"`
+}
+
+type transaction struct {
+	Date        string                `json:"date"`
+	Description string                `json:"description"`
+	Category    Categories `json:"category"`
+	Amount      float32               `json:"amount"`
+}
+
+type summary struct {
+	Category Categories `json:"category"`
+	Amount   float32               `json:"amount"`
+}
+
+type ExpenseResponse struct {
+	Title        string        `json:"title"`
+	Date         string        `json:"date"`
+	Transactions []transaction `json:"transactions"`
+	Summary      []summary     `json:"summary"`
 }
