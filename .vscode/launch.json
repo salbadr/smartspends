@@ -11,7 +11,9 @@
             "args": [],
             "showLog": true,
             "trace": "verbose",
-            "logOutput": "rpc"
+            "cwd": "${workspaceFolder}",
+            "logOutput": "rpc",
+            "envFile": "${workspaceFolder}/.env"
         },
         {
             "name": "Debug TypeScript (Frontend)",

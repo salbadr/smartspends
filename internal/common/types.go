@@ -1,4 +1,5 @@
-package expenses
+package common
+
 import (
 	"encoding/json"
 )
@@ -20,7 +21,6 @@ const (
 	Education
 	Other
 )
-
 
 func (c Categories) String() string {
 	var categories = map[Categories]string{
@@ -51,25 +51,26 @@ func (cat *Categories) MarshalJSON() ([]byte, error) {
 
 }
 
-type ExpenseRequest struct {
-	Expense string `json:"expense"`
+type ExpensesRequest struct {
+	Expenses string `json:"expenses"`
 }
 
-type transaction struct {
-	Date        string                `json:"date"`
-	Description string                `json:"description"`
+type Transaction struct {
+	Date        string     `json:"date"`
+	Description string     `json:"description"`
 	Category    Categories `json:"category"`
-	Amount      float32               `json:"amount"`
+	Amount      float32    `json:"amount"`
+	Confidence  float32    `json:"confidence"`
 }
 
-type summary struct {
+type Summary struct {
 	Category Categories `json:"category"`
-	Amount   float32               `json:"amount"`
+	Amount   float32    `json:"amount"`
 }
 
 type ExpenseResponse struct {
 	Title        string        `json:"title"`
 	Date         string        `json:"date"`
-	Transactions []transaction `json:"transactions"`
-	Summary      []summary     `json:"summary"`
+	Transactions []Transaction `json:"transactions"`
+	Summary      []Summary     `json:"summary"`
 }
