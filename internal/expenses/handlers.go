@@ -2,12 +2,14 @@ package expenses
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
+	"github.com/salbadr/smartspends/internal/ai"
 	"github.com/salbadr/smartspends/internal/common"
 )
 
-func ExpensesHandler() http.HandlerFunc {
+func ExpensesHandler(aiClient ai.AiModel) http.HandlerFunc {
 	fn := func(w http.ResponseWriter, req *http.Request) {
 		var er common.ExpensesRequest
 
@@ -20,7 +22,10 @@ func ExpensesHandler() http.HandlerFunc {
 		w.Header().Set("Content-type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
-		payload := GetExpenses(er.Expenses)
+		payload, err := GetExpenses(er.Expenses, aiClient)
+		if err != nil {
+			log.Printf("Unable to generate response: %v", err)
+		}
 		if err := json.NewEncoder(w).Encode(payload); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
