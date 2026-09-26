@@ -17,7 +17,7 @@ func (cl *Claude) createClient() anthropic.Client{
 	return client
 }
 
-func (cl *Claude) GetResponse(ctx context.Context, prompt string) string{
+func (cl *Claude) GetResponse(ctx context.Context, prompt string) (string, error){
 	cl.createClient()
-	return "claude response"
+	return "claude response", nil
 }

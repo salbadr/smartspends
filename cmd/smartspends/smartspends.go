@@ -9,11 +9,11 @@ import (
 )
 
 func main() {
-	log.Println("Starting")
-	
 
 	mux := http.NewServeMux()
-	expenses.RegisterExpenseRoutes(mux)
+	if err := expenses.RegisterExpenseRoutes(mux); err != nil {
+		log.Fatal(err)
+	}
 
 	mux.Handle("/", http.NotFoundHandler())
 	log.Println("Server started on port 8000")

@@ -3,7 +3,7 @@ package ai
 import (
 	"context"
 	"encoding/json"
-	"log"
+	"errors"
 
 	"github.com/invopop/jsonschema"
 	"github.com/openai/openai-go"
@@ -17,36 +17,42 @@ var _ AiModel = (*OpenAi)(nil)
 
 type OpenAi struct {
 	client *openai.Client
+	schema map[string]any
 }
 
-func NewOpenAi(apiKey string) *OpenAi {
+func NewOpenAi(apiKey string) (*OpenAi, error) {
 	c := openai.NewClient(option.WithAPIKey(apiKey))
+	s, err := setSchema()
+	if err != nil {
+		return nil, errors.New("Could not set schema")
+	}
 
 	return &OpenAi{
 		client: &c,
-	}
+		schema: s,
+	}, nil
 }
 
-func (oa *OpenAi) getSchema() map[string]any {
+func setSchema() (map[string]any, error) {
+	//decode the schema as map[string]any.
+
 	reflector := &jsonschema.Reflector{Anonymous: true}
 	schema := reflector.Reflect(&common.ExpenseResponse{})
 	// encode the schema to a human readable format
 	schemaJSON, err := json.Marshal(schema)
 	if err != nil {
-		log.Fatalf("Failed to marshal schema: %v", err)
+		return nil, err
 	}
-
-	//decode the schema as map[string]any.
 	var dat map[string]any
+
 	if err := json.Unmarshal(schemaJSON, &dat); err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	return dat
-
+	return dat, nil
 }
 
-func (oa *OpenAi) GetResponse(ctx context.Context, prompt string) string {
+func (oa *OpenAi) GetResponse(ctx context.Context, prompt string) (string, error) {
 	response, err := oa.client.Responses.New(ctx, responses.ResponseNewParams{
 		Model: shared.ChatModelGPT4_1Nano,
 		Instructions: openai.String(
@@ -67,15 +73,12 @@ func (oa *OpenAi) GetResponse(ctx context.Context, prompt string) string {
 			Format: responses.ResponseFormatTextConfigUnionParam{
 				OfJSONSchema: &responses.ResponseFormatTextJSONSchemaConfigParam{
 					Name:   "expense_reasoning",
-					Schema: oa.getSchema(),
+					Schema: oa.schema,
 					Strict: openai.Bool(true),
 				},
 			},
 		},
 	})
 
-	if err != nil {
-		panic(err.Error())
-	}
-	return response.OutputText()
+	return response.OutputText(), err
 }
