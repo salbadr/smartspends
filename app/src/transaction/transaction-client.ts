@@ -28,7 +28,8 @@ export class TransactionClient {
                 title: '',
                 date: '',
                 transactions: [],
-                summary: []
+                summary: [],
+                confidence: 0
             }
         }
         catch (error) {

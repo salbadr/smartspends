@@ -2,7 +2,8 @@ export type Transaction = {
   date: string,
   description: string,
   category: string,
-  amount: number
+  amount: number,
+  confidence: number,
 }
 
 export type Summary = {
@@ -21,5 +22,6 @@ export type GetExpenditureResponse = {
   date: string,
   transactions: Transaction[],
   summary: Summary[]
+  confidence: number,
 }
 

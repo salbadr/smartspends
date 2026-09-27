@@ -2,6 +2,8 @@ package common
 
 import (
 	"encoding/json"
+
+	"github.com/invopop/jsonschema"
 )
 
 type Categories int
@@ -44,10 +46,42 @@ func (c Categories) String() string {
 	}
 	return "unknown"
 }
+func (Categories) JSONSchemaExtend(schema *jsonschema.Schema) {
+	schema.Type = "string"
+	schema.Enum = []any{Housing.String(), Groceries.String(), Dining.String(), Transportation.String(), Bills.String(), Utilities.String(), Subscriptions.String(), Entertainment.String(), Shopping.String(), Insurance.String(), Donations.String(), Education.String(), Other.String()}
+}
 
 func (cat *Categories) MarshalJSON() ([]byte, error) {
 
 	return json.Marshal(cat.String())
+
+}
+
+func (cat *Categories) UnmarshalJSON(data []byte) error {
+	var s string
+	var categories = map[string]Categories{
+		"housing":        Housing,
+		"groceries":      Groceries,
+		"dining":         Dining,
+		"transportation": Transportation,
+		"bills":          Bills,
+		"utilities":      Utilities,
+		"subscriptions":  Subscriptions,
+		"entertainment":  Entertainment,
+		"shopping":       Shopping,
+		"insurance":      Insurance,
+		"donations":      Donations,
+		"education":      Education,
+		"other":          Other,
+	}
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	if val, ok := categories[s]; ok {
+		*cat = val
+		return nil
+	}
+	return nil
 
 }
 

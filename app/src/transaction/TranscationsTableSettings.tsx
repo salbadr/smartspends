@@ -37,6 +37,15 @@ export const columns: TableColumns[] = [
             className: 'text-right'
         }
     },
+     {
+        accessorKey: 'confidence',
+        header: 'Confidence',
+        className: 'text-stone-900 font-bold text-right',
+        cell: (info) => info.getValue(),
+        meta: {
+            className: 'text-right'
+        }
+    },
     {
         accessorKey: 'date',
         header: 'Date',
